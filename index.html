@@ -22,34 +22,71 @@ class Stack:
         self.items.append(value)
 
     def pop(self):
-        return self.items.pop() if self.items else None
+        if self.get_size() > 0:
+            return self.items.pop()
+        return None
 
     def peek(self):
-        return self.items[-1] if self.items else None
+        if self.get_size() > 0:
+            return self.items[-1]
+        return None
 
     def get_size(self):
         return len(self.items)
 
+    def get_name(self):
+        return self.name
+
     def print_items(self):
         print(f"{self.name} Stack: {self.items}")
 
-print("Python is starting...")
+print("--- SYSTEM: PYTHON INITIALIZED ---")
+print("Let's play Towers of Hanoi!!")
 
-# Initializing game
+# We are setting this to 3 so it doesn't ask for a pop-up!
+num_disks = 3
+print(f"Playing with {num_disks} disks.")
+
+stacks = []
 left_stack = Stack("Left")
 middle_stack = Stack("Middle")
 right_stack = Stack("Right")
-stacks = [left_stack, middle_stack, right_stack]
+stacks += [left_stack, middle_stack, right_stack]
 
-num_disks = 3
 for disk in range(num_disks, 0, -1):
     left_stack.push(disk)
 
-print(f"Game loaded with {num_disks} disks!")
-for s in stacks:
-    s.print_items()
+num_optimal_moves = (2 ** num_disks) - 1
+print(f"\nThe fastest you can solve this is in {num_optimal_moves} moves")
 
-print("\nIf you see this, the terminal is working!")
+def get_input(prompt):
+    choices = ['L', 'M', 'R']
+    while True:
+        # This input WILL appear inside the black box, not a pop-up!
+        user_input = input(prompt).upper()
+        if user_input in choices:
+            return stacks[choices.index(user_input)]
+        print("Invalid choice. Please type L, M, or R.")
+
+num_user_moves = 0
+while right_stack.get_size() != num_disks:
+    print("\n--- Current State ---")
+    for stack in stacks:
+        stack.print_items()
+    
+    from_stack = get_input("Move FROM (L/M/R): ")
+    to_stack = get_input("Move TO (L/M/R): ")
+
+    if from_stack.get_size() == 0:
+        print("Invalid Move: Source stack is empty.")
+    elif to_stack.get_size() == 0 or from_stack.peek() < to_stack.peek():
+        disk = from_stack.pop()
+        to_stack.push(disk)
+        num_user_moves += 1
+    else:
+        print("Invalid Move: Cannot place larger disk on smaller disk.")
+
+print(f"\nVictory! Total moves: {num_user_moves}")
     </script>
 
 </body>
