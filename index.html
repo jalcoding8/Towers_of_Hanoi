@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Towers of Hanoi</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 </head>
-<body style="background-color: #f0f0f0; padding: 20px;">
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
 
     <h1>Towers of Hanoi</h1>
-    <p>If the black box appears, look at the <b>TOP of your browser</b> for a pop-up box!</p>
+    <p>If the page works, a <b>black terminal box</b> will appear below in about 10 seconds.</p>
 
     <script type="py" worker terminal>
 class Stack:
@@ -32,24 +33,25 @@ class Stack:
     def print_items(self):
         print(f"{self.name} Stack: {self.items}")
 
-print("Let's play Towers of Hanoi!!")
+print("Python is starting...")
 
-# Setup
-stacks = [Stack("Left"), Stack("Middle"), Stack("Right")]
+# Initializing game
+left_stack = Stack("Left")
+middle_stack = Stack("Middle")
+right_stack = Stack("Right")
+stacks = [left_stack, middle_stack, right_stack]
 
-# For now, let's skip the input pop-up to see if it works!
 num_disks = 3
-print(f"Playing with {num_disks} disks.")
-
 for disk in range(num_disks, 0, -1):
-    stacks[0].push(disk)
+    left_stack.push(disk)
 
-print("\n--- Current Board ---")
+print(f"Game loaded with {num_disks} disks!")
 for s in stacks:
     s.print_items()
 
-print("\nSuccess! The Python engine is running.")
+print("\nIf you see this, the terminal is working!")
     </script>
 
 </body>
 </html>
+
