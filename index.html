@@ -2,18 +2,19 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Towers of Hanoi</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css" />
     <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script>
 </head>
-<body style="background-color: #2c3e50; color: white; text-align: center; font-family: sans-serif;">
+<body style="background-color: #2c3e50; color: white; text-align: center; font-family: sans-serif; padding: 20px;">
 
     <h1>Towers of Hanoi</h1>
-    <p>Wait for "Python Initialized" to appear below...</p>
+    <div id="game-area" style="background: #34495e; padding: 20px; border-radius: 10px; display: inline-block; text-align: left; min-width: 300px; font-family: monospace;">
+        <div id="output"></div>
+    </div>
 
     <script type="py">
-from pyscript import display
+from pyscript import display, window
 
 class Stack:
     def __init__(self, name):
@@ -32,22 +33,60 @@ class Stack:
     def get_size(self):
         return len(self.items)
 
-# Setup the game
+    def print_items(self):
+        display(f"{self.name} Stack: {self.items}", target="output", append=True)
+
+# Game Setup
 left_stack = Stack("Left")
 middle_stack = Stack("Middle")
 right_stack = Stack("Right")
+stacks = [left_stack, middle_stack, right_stack]
 
-# Pre-fill with 3 disks so we don't need a pop-up
-for disk in range(3, 0, -1):
+num_disks = 3
+for disk in range(num_disks, 0, -1):
     left_stack.push(disk)
 
-# Display the output directly on the webpage
-display("--- Python Initialized! ---")
-display("Let's play Towers of Hanoi!!")
-display(f"Left Stack: {left_stack.items}")
-display(f"Middle Stack: {middle_stack.items}")
-display(f"Right Stack: {right_stack.items}")
-display("Success! If you see the stacks above, Python is working.")
+num_optimal_moves = (2 ** num_disks) - 1
+
+display("Let's play Towers of Hanoi!!", target="output")
+display(f"Optimal moves: {num_optimal_moves}", target="output", append=True)
+
+# The Game Loop
+num_user_moves = 0
+while right_stack.get_size() != num_disks:
+    display("<br>--- Current State ---", target="output", append=True)
+    for s in stacks:
+        s.print_items()
+    
+    # On Mac, window.prompt is the most reliable way to get user input
+    from_choice = window.prompt("Move FROM (L, M, or R):")
+    if from_choice is None: break
+    from_choice = from_choice.upper()
+    
+    to_choice = window.prompt("Move TO (L, M, or R):")
+    if to_choice is None: break
+    to_choice = to_choice.upper()
+
+    # Mapping letters to stacks
+    choices = {'L': left_stack, 'M': middle_stack, 'R': right_stack}
+    
+    if from_choice not in choices or to_choice not in choices:
+        display("Invalid letters! Use L, M, or R.", target="output", append=True)
+        continue
+
+    from_s = choices[from_choice]
+    to_s = choices[to_choice]
+
+    if from_s.get_size() == 0:
+        display("Invalid: Source is empty!", target="output", append=True)
+    elif to_s.get_size() == 0 or from_s.peek() < to_s.peek():
+        to_s.push(from_s.pop())
+        num_user_moves += 1
+    else:
+        display("Invalid: Can't place larger disk on smaller!", target="output", append=True)
+
+if right_stack.get_size() == num_disks:
+    display(f"<br>VICTORY! Total moves: {num_user_moves}", target="output", append=True)
     </script>
 
 </body>
