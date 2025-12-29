@@ -1,6 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Towers of Hanoi</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+</head>
+<body>
+
+    <h1>Towers of Hanoi</h1>
+    <p>Check the browser console (F12) or the screen below for output!</p>
+
+    <script type="py">
+        # --- THE MISSING PIECE: The Stack Class ---
+class Stack:
+    def __init__(self, name):
+        self.name = name
+        self.items = []
+
+    def push(self, value):
+        self.items.append(value)
+
+    def pop(self):
+        if self.get_size() > 0:
+            return self.items.pop()
+
+    def peek(self):
+        if self.get_size() > 0:
+            return self.items[-1]
+
+    def get_size(self):
+        return len(self.items)
+
+    def get_name(self):
+        return self.name
+
+    def print_items(self):
+        print(f"{self.name} Stack: {self.items}")
+
+# --- ORIGINAL CODE STARTS HERE ---
+print("\nLet's play Towers of Hanoi!!")
 from stack import Stack
 
-print("\nLet's play Towers of Hanoi!!")
+print("")
 print("Make good choices.")
 
 #Create the Stacks
@@ -77,4 +118,9 @@ while right_stack.get_size() != num_disks:
       
        
 print("\n\nYpu completed the in {0} moves, and the optimal number of moves is {1}.".format(num_user_moves, num_optiaml_moves))      
+
+    </script>
+
+</body>
+</html>   
       
