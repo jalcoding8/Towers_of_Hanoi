@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Towers of Hanoi</title>
-    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
-    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+<body style="background-color: #2c3e50; color: white; text-align: center; font-family: sans-serif;">
 
     <h1>Towers of Hanoi</h1>
-    <p>If the page works, a <b>black terminal box</b> will appear below in about 10 seconds.</p>
+    <p>Wait for "Python Initialized" to appear below...</p>
 
-    <script type="py" worker terminal>
+    <script type="py">
+from pyscript import display
+
 class Stack:
     def __init__(self, name):
         self.name = name
@@ -22,71 +24,30 @@ class Stack:
         self.items.append(value)
 
     def pop(self):
-        if self.get_size() > 0:
-            return self.items.pop()
-        return None
+        return self.items.pop() if self.items else None
 
     def peek(self):
-        if self.get_size() > 0:
-            return self.items[-1]
-        return None
+        return self.items[-1] if self.items else None
 
     def get_size(self):
         return len(self.items)
 
-    def get_name(self):
-        return self.name
-
-    def print_items(self):
-        print(f"{self.name} Stack: {self.items}")
-
-print("--- SYSTEM: PYTHON INITIALIZED ---")
-print("Let's play Towers of Hanoi!!")
-
-# We are setting this to 3 so it doesn't ask for a pop-up!
-num_disks = 3
-print(f"Playing with {num_disks} disks.")
-
-stacks = []
+# Setup the game
 left_stack = Stack("Left")
 middle_stack = Stack("Middle")
 right_stack = Stack("Right")
-stacks += [left_stack, middle_stack, right_stack]
 
-for disk in range(num_disks, 0, -1):
+# Pre-fill with 3 disks so we don't need a pop-up
+for disk in range(3, 0, -1):
     left_stack.push(disk)
 
-num_optimal_moves = (2 ** num_disks) - 1
-print(f"\nThe fastest you can solve this is in {num_optimal_moves} moves")
-
-def get_input(prompt):
-    choices = ['L', 'M', 'R']
-    while True:
-        # This input WILL appear inside the black box, not a pop-up!
-        user_input = input(prompt).upper()
-        if user_input in choices:
-            return stacks[choices.index(user_input)]
-        print("Invalid choice. Please type L, M, or R.")
-
-num_user_moves = 0
-while right_stack.get_size() != num_disks:
-    print("\n--- Current State ---")
-    for stack in stacks:
-        stack.print_items()
-    
-    from_stack = get_input("Move FROM (L/M/R): ")
-    to_stack = get_input("Move TO (L/M/R): ")
-
-    if from_stack.get_size() == 0:
-        print("Invalid Move: Source stack is empty.")
-    elif to_stack.get_size() == 0 or from_stack.peek() < to_stack.peek():
-        disk = from_stack.pop()
-        to_stack.push(disk)
-        num_user_moves += 1
-    else:
-        print("Invalid Move: Cannot place larger disk on smaller disk.")
-
-print(f"\nVictory! Total moves: {num_user_moves}")
+# Display the output directly on the webpage
+display("--- Python Initialized! ---")
+display("Let's play Towers of Hanoi!!")
+display(f"Left Stack: {left_stack.items}")
+display(f"Middle Stack: {middle_stack.items}")
+display(f"Right Stack: {right_stack.items}")
+display("Success! If you see the stacks above, Python is working.")
     </script>
 
 </body>
