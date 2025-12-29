@@ -1,45 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Python Towers of Hanoi</title>
+    <meta charset="UTF-8">
+    <title>Towers of Hanoi</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 </head>
 <body>
 
     <h1>Towers of Hanoi</h1>
-    <p>Check the browser console (F12) or the screen below for output!</p>
-    
-<script type="py" worker>
+    <p>The game will start in the black box below. <b>Look for the pop-up at the top of your browser!</b></p>
+
+    <script type="py" worker terminal>
 class Stack:
-    def __init__(self, name):
-        self.name = name
-        self.items = []
+  def __init__(self, name):
+    self.name = name
+    self.items = []
 
-    def push(self, value):
-        self.items.append(value)
+  def push(self, value):
+    self.items.append(value)
 
-    def pop(self):
-        if self.get_size() > 0:
-            return self.items.pop()
-        return None
+  def pop(self):
+    if self.get_size() > 0:
+      return self.items.pop()
+    else:
+      return None
 
-    def peek(self):
-        if self.get_size() > 0:
-            return self.items[-1]
-        return None
+  def peek(self):
+    if self.get_size() > 0:
+      return self.items[-1]
+    else:
+      return None
 
-    def get_size(self):
-        return len(self.items)
+  def get_size(self):
+    return len(self.items)
 
-    def get_name(self):
-        return self.name
+  def get_name(self):
+    return self.name
 
-    def print_items(self):
-        print(f"{self.name} Stack: {self.items}")
+  def print_items(self):
+    print(f"{self.name} Stack: {self.items}")
 
 print("\nLet's play Towers of Hanoi!!")
-print("Make good choices.")
 
 stacks = []
 left_stack = Stack("Left")
@@ -47,54 +49,55 @@ middle_stack = Stack("Middle")
 right_stack = Stack("Right")
 stacks += [left_stack, middle_stack, right_stack]
 
-num_disks = int(input("\nHow many disks do you want to play with?\n"))
+num_disks = int(input("How many disks do you want to play with? (3 or more)"))
 while num_disks < 3:
-    num_disks = int(input("\nEnter a number greater than or equal to 3\n"))
+  num_disks = int(input("Enter a number greater than or equal to 3"))
 
 for disk in range(num_disks, 0, -1):
-    left_stack.push(disk)
+  left_stack.push(disk)
 
 num_optimal_moves = (2 ** num_disks) - 1
-print("\nThe fastest you can solve this game is in {0} moves".format(num_optimal_moves))
+print(f"\nThe fastest you can solve this is in {num_optimal_moves} moves")
 
 def get_input():
-    choices = [stack.get_name()[0] for stack in stacks]
-    while True:
-        for i in range(len(stacks)):
-            name = stacks[i].get_name()
-            letter = choices[i]
-            print("Enter {0} for {1}.".format(letter, name))
-        
-        user_input = input("Select a stack (L, M, or R): ")
-        if user_input in choices:
-            for i in range(len(stacks)):
-                if choices[i] == user_input:
-                    return stacks[i]
+  choices = [stack.get_name()[0] for stack in stacks]
+  while True:
+    for i in range(len(stacks)):
+      name = stacks[i].get_name()
+      letter = choices[i]
+    
+    user_input = input("Select a stack - L for Left, M for Middle, R for Right: ").upper()
+    
+    if user_input in choices:
+      for i in range(len(stacks)):
+        if choices[i] == user_input:
+          return stacks[i]
+    else:
+      print("Invalid choice. Please type L, M, or R.")
 
 num_user_moves = 0
-while right_stack.get_size() != num_disks:
-    print("\n...Current Stack")
-    for stack in stacks:
-        stack.print_items()
-    
-    while True:
-        print("\nWhich stack do you want to move from?\n")
-        from_stack = get_input()
-        print("\nWhich stack do you want to move to?\n")
-        to_stack = get_input()
+while (right_stack.get_size() != num_disks):
+  print("\n...Current State:")
+  for stack in stacks:
+    stack.print_items()
+  
+  while True:
+    print("\nWhich stack to move FROM?")
+    from_stack = get_input()
+    print("Which stack to move TO?")
+    to_stack = get_input()
 
-        if from_stack.get_size() == 0:
-            print("\nInvalid Move. Try Again")
-        elif to_stack.get_size() == 0 or from_stack.peek() < to_stack.peek():
-            disk = from_stack.pop()
-            to_stack.push(disk)
-            num_user_moves += 1
-            break
-        else:
-            print("\nNot valid. Try again.")
+    if from_stack.get_size() == 0:
+      print("\n\nInvalid Move. Try Again")
+    elif (to_stack.get_size() == 0) or (from_stack.peek() < to_stack.peek()):
+      disk = from_stack.pop()
+      to_stack.push(disk)
+      num_user_moves += 1
+      break
+    else:
+      print("\n\nInvalid Move. Try Again")
 
-print("\nYou completed the game in {0} moves, and the optimal number of moves is {1}.".format(num_user_moves, num_optimal_moves))
-</script>
-      
+print(f"\n\nYou completed the game in {num_user_moves} moves, and the optimal number of moves is {num_optimal_moves}")
+    </script>
 </body>
-</html>    
+</html>  
