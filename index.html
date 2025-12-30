@@ -28,8 +28,8 @@
     <div id="status">Loading Python...</div>
 
     <script type="py">
-
 from pyscript import window, document
+import asyncio
 
 class Stack:
     def __init__(self, div_id):
@@ -46,7 +46,6 @@ class Stack:
         return val
 
     def render(self):
-        # We use document.querySelector instead of Element
         pillar = document.querySelector(f"#{self.div_id}")
         html = '<div style="position: absolute; width: 10px; height: 150px; background: #7f8c8d; bottom: 0; z-index: 0;"></div>'
         for disk in self.items:
@@ -54,24 +53,25 @@ class Stack:
             html += f'<div style="height: 25px; width: {width}px; margin-bottom: 2px; border-radius: 5px; background: #e74c3c; border: 1px solid #c0392b; color: white; font-weight: bold; z-index: 1; text-align: center; line-height: 25px;">{disk}</div>'
         pillar.innerHTML = html
 
-# Initialize
-left = Stack("L-pillar")
-mid = Stack("M-pillar")
-right = Stack("R-pillar")
+# Initialize stacks
+left, mid, right = Stack("L-pillar"), Stack("M-pillar"), Stack("R-pillar")
 choices = {'L': left, 'M': mid, 'R': right}
 
-# Fill the first stack
 for d in range(3, 0, -1):
     left.push(d)
 
-# Update the status text
-document.querySelector("#status").innerHTML = "Game Ready! Use L, M, or R"
+document.querySelector("#status").innerHTML = "Game Ready! Enter moves..."
 
-def play_game():
+# We make the function 'async' so the browser can breathe between moves
+async def play_game():
     num_moves = 0
     while len(right.items) != 3:
+        # We give the browser a tiny break to update the visuals
+        await asyncio.sleep(0.1) 
+        
         f_choice = window.prompt("Move FROM (L, M, R):")
         if not f_choice: break
+        
         t_choice = window.prompt("Move TO (L, M, R):")
         if not t_choice: break
         
@@ -80,21 +80,21 @@ def play_game():
         if f_k in choices and t_k in choices:
             fs, ts = choices[f_k], choices[t_k]
             if not fs.items:
-                window.alert("That stack is empty!")
+                window.alert("Empty Stack!")
             elif not ts.items or fs.items[-1] < ts.items[-1]:
                 ts.push(fs.pop())
                 num_moves += 1
                 document.querySelector("#status").innerHTML = f"Moves: {num_moves}"
             else:
-                window.alert("Invalid Move: Can't put larger on smaller!")
+                window.alert("Invalid Move!")
         else:
-            window.alert("Please use L, M, or R")
+            window.alert("Use L, M, or R")
 
     if len(right.items) == 3:
         document.querySelector("#status").innerHTML = f"VICTORY in {num_moves} moves!"
 
-# Start the logic
-play_game()
+# Start the game using the async handler
+asyncio.ensure_future(play_game())
     </script>
   
 
