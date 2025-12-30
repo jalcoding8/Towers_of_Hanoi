@@ -28,12 +28,11 @@
     <div id="status">Loading Python...</div>
 
     <script type="py">
+
 from pyscript import window, document
 
-
 class Stack:
-    def __init__(self, name, div_id):
-        self.name = name
+    def __init__(self, div_id):
         self.div_id = div_id
         self.items = []
 
@@ -46,54 +45,58 @@ class Stack:
         self.render()
         return val
 
-    def peek(self):
-        return self.items[-1] if self.items else None
-
     def render(self):
-        # This function updates the actual HTML on the page
-        html = ""
+        # We use document.querySelector instead of Element
+        pillar = document.querySelector(f"#{self.div_id}")
+        html = '<div style="position: absolute; width: 10px; height: 150px; background: #7f8c8d; bottom: 0; z-index: 0;"></div>'
         for disk in self.items:
-            width = 30 + (disk * 20)  # Make bigger disks wider
-            html += f'<div class="disk" style="width: {width}px;">{disk}</div>'
-        Element(self.div_id).element.innerHTML = html
+            width = 40 + (disk * 25)
+            html += f'<div style="height: 25px; width: {width}px; margin-bottom: 2px; border-radius: 5px; background: #e74c3c; border: 1px solid #c0392b; color: white; font-weight: bold; z-index: 1; text-align: center; line-height: 25px;">{disk}</div>'
+        pillar.innerHTML = html
 
-# Setup
-left = Stack("Left", "L-pillar")
-mid = Stack("Middle", "M-pillar")
-right = Stack("Right", "R-pillar")
+# Initialize
+left = Stack("L-pillar")
+mid = Stack("M-pillar")
+right = Stack("R-pillar")
 choices = {'L': left, 'M': mid, 'R': right}
 
-num_disks = 3
-for d in range(num_disks, 0, -1):
+# Fill the first stack
+for d in range(3, 0, -1):
     left.push(d)
 
-Element("status").write("Game Started! Move L to R to begin.")
+# Update the status text
+document.querySelector("#status").innerHTML = "Game Ready! Use L, M, or R"
 
-num_moves = 0
-while len(right.items) != num_disks:
-    f_choice = window.prompt("Move FROM (L, M, R):")
-    if not f_choice: break
-    t_choice = window.prompt("Move TO (L, M, R):")
-    if not t_choice: break
-    
-    f_key, t_key = f_choice.upper(), t_choice.upper()
-    
-    if f_key in choices and t_key in choices:
-        from_s, to_s = choices[f_key], choices[t_key]
-        if not from_s.items:
-            window.alert("Source stack is empty!")
-        elif not to_s.items or from_s.peek() < to_s.peek():
-            to_s.push(from_s.pop())
-            num_moves += 1
-            Element("status").write(f"Moves: {num_moves}")
+def play_game():
+    num_moves = 0
+    while len(right.items) != 3:
+        f_choice = window.prompt("Move FROM (L, M, R):")
+        if not f_choice: break
+        t_choice = window.prompt("Move TO (L, M, R):")
+        if not t_choice: break
+        
+        f_k, t_k = f_choice.upper(), t_choice.upper()
+        
+        if f_k in choices and t_k in choices:
+            fs, ts = choices[f_k], choices[t_k]
+            if not fs.items:
+                window.alert("That stack is empty!")
+            elif not ts.items or fs.items[-1] < ts.items[-1]:
+                ts.push(fs.pop())
+                num_moves += 1
+                document.querySelector("#status").innerHTML = f"Moves: {num_moves}"
+            else:
+                window.alert("Invalid Move: Can't put larger on smaller!")
         else:
-            window.alert("Invalid Move: Can't put larger on smaller!")
-    else:
-        window.alert("Please use L, M, or R")
+            window.alert("Please use L, M, or R")
 
-if len(right.items) == num_disks:
-    Element("status").write(f"VICTORY in {num_moves} moves!")
+    if len(right.items) == 3:
+        document.querySelector("#status").innerHTML = f"VICTORY in {num_moves} moves!"
+
+# Start the logic
+play_game()
     </script>
+  
 
 </body>
 </html>
