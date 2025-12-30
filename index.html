@@ -49,27 +49,36 @@ class Stack:
         pillar = document.querySelector(f"#{self.div_id}")
         html = '<div style="position: absolute; width: 10px; height: 150px; background: #7f8c8d; bottom: 0; z-index: 0;"></div>'
         for disk in self.items:
-            width = 40 + (disk * 25)
-            html += f'<div style="height: 25px; width: {width}px; margin-bottom: 2px; border-radius: 5px; background: #e74c3c; border: 1px solid #c0392b; color: white; font-weight: bold; z-index: 1; text-align: center; line-height: 25px;">{disk}</div>'
+            # Adjust disk width based on total disks to keep it looking good
+            width = 30 + (disk * 20)
+            html += f'<div style="height: 20px; width: {width}px; margin-bottom: 2px; border-radius: 5px; background: #e74c3c; border: 1px solid #c0392b; color: white; font-weight: bold; z-index: 1; text-align: center; line-height: 20px; font-size: 12px;">{disk}</div>'
         pillar.innerHTML = html
 
 # Initialize stacks
 left, mid, right = Stack("L-pillar"), Stack("M-pillar"), Stack("R-pillar")
 choices = {'L': left, 'M': mid, 'R': right}
 
-for d in range(3, 0, -1):
-    left.push(d)
-
-document.querySelector("#status").innerHTML = "Game Ready! Enter moves..."
-
-# We make the function 'async' so the browser can breathe between moves
 async def play_game():
+    # 1. Ask for difficulty first
+    ans = window.prompt("How many disks would you like? (Recommended: 3 to 6)")
+    try:
+        num_disks = int(ans)
+        if num_disks < 1: num_disks = 3
+    except:
+        num_disks = 3
+
+    # 2. Clear and Fill the stacks
+    for d in range(num_disks, 0, -1):
+        left.push(d)
+
+    optimal = (2 ** num_disks) - 1
+    document.querySelector("#status").innerHTML = f"Goal: Solve in {optimal} moves!"
+    
     num_moves = 0
-    while len(right.items) != 3:
-        # We give the browser a tiny break to update the visuals
+    while len(right.items) != num_disks:
         await asyncio.sleep(0.1) 
         
-        f_choice = window.prompt("Move FROM (L, M, R):")
+        f_choice = window.prompt(f"Move FROM (L, M, R):\nMoves: {num_moves}")
         if not f_choice: break
         
         t_choice = window.prompt("Move TO (L, M, R):")
@@ -80,20 +89,20 @@ async def play_game():
         if f_k in choices and t_k in choices:
             fs, ts = choices[f_k], choices[t_k]
             if not fs.items:
-                window.alert("Empty Stack!")
+                window.alert("That stack is empty!")
             elif not ts.items or fs.items[-1] < ts.items[-1]:
                 ts.push(fs.pop())
                 num_moves += 1
-                document.querySelector("#status").innerHTML = f"Moves: {num_moves}"
+                document.querySelector("#status").innerHTML = f"Moves: {num_moves} / Target: {optimal}"
             else:
-                window.alert("Invalid Move!")
+                window.alert("Invalid Move: Larger on smaller!")
         else:
             window.alert("Use L, M, or R")
 
-    if len(right.items) == 3:
-        document.querySelector("#status").innerHTML = f"VICTORY in {num_moves} moves!"
+    if len(right.items) == num_disks:
+        document.querySelector("#status").innerHTML = f"VICTORY! Completed in {num_moves} moves."
 
-# Start the game using the async handler
+# Start the game
 asyncio.ensure_future(play_game())
     </script>
   
