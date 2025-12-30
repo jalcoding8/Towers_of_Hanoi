@@ -2,91 +2,96 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Towers of Hanoi</title>
+    <title>Visual Towers of Hanoi</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css" />
     <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script>
+    <style>
+        body { background-color: #2c3e50; color: white; font-family: sans-serif; text-align: center; }
+        .game-container { display: flex; justify-content: center; gap: 50px; margin-top: 50px; height: 200px; align-items: flex-end; }
+        .pillar { width: 100px; border-bottom: 10px solid #7f8c8d; position: relative; display: flex; flex-direction: column-reverse; align-items: center; }
+        .pillar::after { content: ''; position: absolute; width: 10px; height: 150px; background: #7f8c8d; bottom: 0; z-index: -1; }
+        .disk { height: 25px; margin-bottom: 2px; border-radius: 5px; background: #e74c3c; border: 1px solid #c0392b; color: white; font-weight: bold; line-height: 25px; }
+        #status { margin-top: 30px; font-family: monospace; font-size: 1.2em; color: #f1c40f; }
+    </style>
 </head>
-<body style="background-color: #2c3e50; color: white; text-align: center; font-family: sans-serif; padding: 20px;">
+<body>
 
     <h1>Towers of Hanoi</h1>
-    <div id="game-area" style="background: #34495e; padding: 20px; border-radius: 10px; display: inline-block; text-align: left; min-width: 300px; font-family: monospace;">
-        <div id="output"></div>
+    <p>Watch the stacks update below as you enter your moves!</p>
+
+    <div class="game-container">
+        <div id="L-pillar" class="pillar"></div>
+        <div id="M-pillar" class="pillar"></div>
+        <div id="R-pillar" class="pillar"></div>
     </div>
+    
+    <div id="status">Loading Python...</div>
 
     <script type="py">
-from pyscript import display, window
+from pyscript import Element, window
 
 class Stack:
-    def __init__(self, name):
+    def __init__(self, name, div_id):
         self.name = name
+        self.div_id = div_id
         self.items = []
 
     def push(self, value):
         self.items.append(value)
+        self.render()
 
     def pop(self):
-        return self.items.pop() if self.items else None
+        val = self.items.pop() if self.items else None
+        self.render()
+        return val
 
     def peek(self):
         return self.items[-1] if self.items else None
 
-    def get_size(self):
-        return len(self.items)
+    def render(self):
+        # This function updates the actual HTML on the page
+        html = ""
+        for disk in self.items:
+            width = 30 + (disk * 20)  # Make bigger disks wider
+            html += f'<div class="disk" style="width: {width}px;">{disk}</div>'
+        Element(self.div_id).element.innerHTML = html
 
-    def print_items(self):
-        display(f"{self.name} Stack: {self.items}", target="output", append=True)
-
-# Game Setup
-left_stack = Stack("Left")
-middle_stack = Stack("Middle")
-right_stack = Stack("Right")
-stacks = [left_stack, middle_stack, right_stack]
+# Setup
+left = Stack("Left", "L-pillar")
+mid = Stack("Middle", "M-pillar")
+right = Stack("Right", "R-pillar")
+choices = {'L': left, 'M': mid, 'R': right}
 
 num_disks = 3
-for disk in range(num_disks, 0, -1):
-    left_stack.push(disk)
+for d in range(num_disks, 0, -1):
+    left.push(d)
 
-num_optimal_moves = (2 ** num_disks) - 1
+Element("status").write("Game Started! Move L to R to begin.")
 
-display("Let's play Towers of Hanoi!!", target="output")
-display(f"Optimal moves: {num_optimal_moves}", target="output", append=True)
-
-# The Game Loop
-num_user_moves = 0
-while right_stack.get_size() != num_disks:
-    display("<br>--- Current State ---", target="output", append=True)
-    for s in stacks:
-        s.print_items()
+num_moves = 0
+while len(right.items) != num_disks:
+    f_choice = window.prompt("Move FROM (L, M, R):")
+    if not f_choice: break
+    t_choice = window.prompt("Move TO (L, M, R):")
+    if not t_choice: break
     
-    # On Mac, window.prompt is the most reliable way to get user input
-    from_choice = window.prompt("Move FROM (L, M, or R):")
-    if from_choice is None: break
-    from_choice = from_choice.upper()
+    f_key, t_key = f_choice.upper(), t_choice.upper()
     
-    to_choice = window.prompt("Move TO (L, M, or R):")
-    if to_choice is None: break
-    to_choice = to_choice.upper()
-
-    # Mapping letters to stacks
-    choices = {'L': left_stack, 'M': middle_stack, 'R': right_stack}
-    
-    if from_choice not in choices or to_choice not in choices:
-        display("Invalid letters! Use L, M, or R.", target="output", append=True)
-        continue
-
-    from_s = choices[from_choice]
-    to_s = choices[to_choice]
-
-    if from_s.get_size() == 0:
-        display("Invalid: Source is empty!", target="output", append=True)
-    elif to_s.get_size() == 0 or from_s.peek() < to_s.peek():
-        to_s.push(from_s.pop())
-        num_user_moves += 1
+    if f_key in choices and t_key in choices:
+        from_s, to_s = choices[f_key], choices[t_key]
+        if not from_s.items:
+            window.alert("Source stack is empty!")
+        elif not to_s.items or from_s.peek() < to_s.peek():
+            to_s.push(from_s.pop())
+            num_moves += 1
+            Element("status").write(f"Moves: {num_moves}")
+        else:
+            window.alert("Invalid Move: Can't put larger on smaller!")
     else:
-        display("Invalid: Can't place larger disk on smaller!", target="output", append=True)
+        window.alert("Please use L, M, or R")
 
-if right_stack.get_size() == num_disks:
-    display(f"<br>VICTORY! Total moves: {num_user_moves}", target="output", append=True)
+if len(right.items) == num_disks:
+    Element("status").write(f"VICTORY in {num_moves} moves!")
     </script>
 
 </body>
