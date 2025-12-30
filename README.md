@@ -32,3 +32,4 @@
    *  Using git commands in bash shell (zsh) terminal and GitHub
    *  Gemini
    *  Google
+   *  look at the Towersof Hanoi pdf in the root directory - completed the game using 6 disks - took 90 moves though - try to beat it.
