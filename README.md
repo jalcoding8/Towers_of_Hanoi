@@ -1,6 +1,6 @@
 <img width="150" height="150" alt="image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOJTD_Dwtt-Z3P6m-1vi98_hrbDm2iDEid6Q&" />
 
-<img width="200" height="100" alt="Towers of Hanoi" src="https://tinyurl.com/mrx4pkh3"/>  
+<img width="200" height="100" alt="Towers of Hanoi" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlUsHJ17dhVlJ-vJZ0eAtUCW5-r_Ke5Waqzg&s" />  
 
 # Description
 
