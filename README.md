@@ -19,7 +19,7 @@
    *  LICENSE
    *  gitignore
    *  Image files
-   *  Towers_Hanoi.pdf
+   *  Towers_of_Hanoi.pdf
 
 ## General Information
    *  This project uses python3 to explain the logic of the game Towers of Hanoi
@@ -34,6 +34,8 @@
    *  Utilizing Markdown language for the README.md content
    *  Visual Studio Code
    *  Using git commands in bash shell (zsh) terminal and GitHub
-   *  Gemini
+   *  HTML5
+   *  CSS3
+   *  favicon tab
    *  Google
-   *  look at the Towers of Hanoi pdf in the root directory - completed the game using 6 disks - took 90 moves though - try to beat it.
+   *  look at the Towers of Hanoi pdf in the root directory - completed the game using 6 disks - took 90 moves though (optimal is63) - try to beat it.
