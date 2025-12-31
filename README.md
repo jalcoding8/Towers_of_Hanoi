@@ -38,4 +38,4 @@
    *  CSS3
    *  favicon tab
    *  Google
-   *  look at the Towers of Hanoi pdf in the root directory - completed the game using 6 disks - took 90 moves though (optimal is63) - try to beat it.
+   *  look at the Towers of Hanoi pdf in the root directory - completed the game using 6 disks - took 90 moves though (optimal is 63) - try to beat it.
