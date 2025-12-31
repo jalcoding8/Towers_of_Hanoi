@@ -19,7 +19,7 @@
    *  LICENSE
    *  gitignore
    *  Images placed in root directory
-   *  Towers_of_Hanoi.pdf
+   *  Towers_of_Hanoi.pdf is snapshot of my completed game
 
 ## General Information
    *  This project uses python3 to explain the logic of the game Towers of Hanoi
