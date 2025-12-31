@@ -18,12 +18,14 @@
    *  resources 
    *  LICENSE
    *  gitignore
+   *  Image files
+   *  Towers_Hanoi.pdf
 
 ## General Information
    *  This project uses python3 to explain the logic of the game Towers of Hanoi
    *  The README.md includes an image of the game
    *  The README.md utilized the Markdown language syntax
-   *  This project included the use of git commands 
+   *  This project included the use of git (Bash/zsh) commands 
    
 
 ## Technologies
