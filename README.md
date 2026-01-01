@@ -21,6 +21,8 @@
    *  Images placed in root directory
    *  Towers_of_Hanoi.pdf is snapshot of my completed game
 
+   <img width="50" height="50" alt="favicon-50x50" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlUsHJ17dhVlJ-vJZ0eAtUCW5-r_Ke5Waqzg&s" />
+
 ## General Information
    *  This project uses python3 to explain the logic of the game Towers of Hanoi
    *  The README.md includes an image of the game
